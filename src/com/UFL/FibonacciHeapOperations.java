@@ -1,121 +1,91 @@
 package com.UFL;
 
 public class FibonacciHeapOperations {
-    /** to store the maximum node in Fibonacci heap. */
-    private FibHeapNode maxNode;
-    /** to store the number of nodes in Fibonacci heap. */
-    private int nodeCount;
+    private FibHeapNode node_with_max_key;
+    private int no_of_nodes;
+    int numRoots = 0;
 
-    /**
-     * Function isHeapEmpty returns TRUE if the heap is empty
-     * and FALSE otherwise.
-     * @return
-     */
-    public boolean isHeapEmpty() {
-        if(maxNode == null)
-            return Boolean.TRUE;
-        else
-            return Boolean.FALSE;
+    public void insert(FibHeapNode new_node, int key) {
+        new_node.key = key;
+        if (node_with_max_key != null) {
+            addNode(new_node, key);
+        } else {
+            node_with_max_key = new_node;
+        }
+        no_of_nodes++;
     }
 
-    /**
-     * Function to inserts nodes into Fibonacci heap.
-     * @param newNode
-     * @param key
-     */
-    public void insert(FibHeapNode newNode, int key) {
-        newNode.key = key;
-        //Heap is not empty
-        if(maxNode != null) {
-            newNode.left = maxNode;
-            newNode.right = maxNode.right;
-            maxNode.right = newNode;
-            newNode.right.left = newNode;
-            //update maxNode with newNode
-            if(key > maxNode.key) {
-                maxNode = newNode;
-            }
+    private void addNode(FibHeapNode new_node, int key) {
+        new_node.left = node_with_max_key;
+        new_node.right = node_with_max_key.right;
+        node_with_max_key.right = new_node;
+        new_node.right.left = new_node;
+        if (key > node_with_max_key.key) {
+            node_with_max_key = new_node;
         }
-        //Heap is empty.
-        else {
-            maxNode = newNode;
-        }
-        //Incrementing the node count after insertion.
-        nodeCount++;
     }
 
-    /**
-     * Increases the key of the given node
-     * by the value passed.
-     * @param current
-     * @param newKey
-     * @return FibHeapNode
-     */
     public FibHeapNode increaseKey(FibHeapNode current, int newKey) {
-        FibHeapNode parent=null;
+        FibHeapNode parent = null;
         current.key = newKey;
         parent = current.parent;
-        //If the current node's key is greater than that of its parent
-        //then call cut and cascadeCut to preserve
-        //Max Fibonacci heap properties
-        if((parent != null) && (current.key > parent.key)) {
+        if ((parent != null) && (current.key > parent.key)) {
             cut(current, parent);
             cascadeCut(parent);
         }
-        //Updating the maxNode with current node if maxNode is greater
-        //than that of current node
-        if(current.key > maxNode.key) {
-            maxNode = current;
+        if (current.key > node_with_max_key.key) {
+            node_with_max_key = current;
         }
         return current;
     }
 
-    /**
-     * Removes and returns the maxNode from the
-     * Max Fibonacci heap
-     * @return FibHeapNode
-     */
     public FibHeapNode removeMax() {
-        FibHeapNode nodeToDelete = maxNode;
-        if(nodeToDelete != null) {
-            int  childCount = nodeToDelete.degree_of_node;
-            FibHeapNode child = nodeToDelete.child;
-            FibHeapNode tempRight;
-            // for each child of the node to delete...
-            while(childCount > 0) {
-                tempRight = child.right;
-                //remove child from child list
-                child.left.right = child.right;
-                child.right.left = child.left;
-                //add the child to root list
-                child.left = maxNode;
-                child.right = maxNode.right;
-                maxNode.right = child;
-                child.right.left = child;
-                //set the parent of child to null
-                child.parent = null;
-                child = tempRight;
-                childCount--;
-            }
-            //remove the node to delete from the root list
-            nodeToDelete.left.right = nodeToDelete.right;
-            nodeToDelete.right.left = nodeToDelete.left;
-            if(nodeToDelete == nodeToDelete.right) {
-                maxNode = null;
-            }
-            else {
-                maxNode = nodeToDelete.right;
-                pairwiseCombine();
-            }
-            //decrement the heap size
-            nodeCount--;
+        FibHeapNode nodeToDelete = node_with_max_key;
+        if (nodeToDelete != null) {
+            updateChildCount(nodeToDelete);
+            removeNodeFromRoot(nodeToDelete);
         }
-        //return the removed maxNode
         return nodeToDelete;
+    }
+
+    private void removeNodeFromRoot(FibHeapNode nodeToDelete) {
+        nodeToDelete.left.right = nodeToDelete.right;
+        nodeToDelete.right.left = nodeToDelete.left;
+        if (nodeToDelete == nodeToDelete.right) {
+            node_with_max_key = null;
+        } else {
+            node_with_max_key = nodeToDelete.right;
+            pairwiseCombine();
+        }
+        no_of_nodes--;
+    }
+
+    private void updateChildCount(FibHeapNode nodeToDelete) {
+        int childCount = nodeToDelete.degree_of_node;
+        FibHeapNode child = nodeToDelete.child;
+        deleteNodes(childCount, child);
+
+    }
+
+    private void deleteNodes(int childCount, FibHeapNode child) {
+        FibHeapNode tempRight;
+        while (childCount > 0) {
+            tempRight = child.right;
+            child.left.right = child.right;
+            child.right.left = child.left;
+            child.left = node_with_max_key;
+            child.right = node_with_max_key.right;
+            node_with_max_key.right = child;
+            child.right.left = child;
+            child.parent = null;
+            child = tempRight;
+            childCount--;
+        }
     }
 
     /**
      * removes child from the child list of parent.
+     *
      * @param child
      * @param parent
      */
@@ -124,17 +94,15 @@ public class FibonacciHeapOperations {
         child.left.right = child.right;
         child.right.left = child.left;
         parent.degree_of_node--;
-        //set the child of parent to appropriate node
-        if(parent.child == child) {
+        if (parent.child == child) {
             parent.child = child.right;
         }
-        if(parent.degree_of_node == 0) {
+        if (parent.degree_of_node == 0) {
             parent.child = null;
         }
-        //add the child to the root list of heap
-        child.left = maxNode;
-        child.right = maxNode.right;
-        maxNode.right = child;
+        child.left = node_with_max_key;
+        child.right = node_with_max_key.right;
+        node_with_max_key.right = child;
         child.right.left = child;
         child.parent = null;
         child.child_cut = false;
@@ -143,15 +111,15 @@ public class FibonacciHeapOperations {
     /**
      * Cuts the child from its parent till a parent with
      * child_cut value FALSE is encountered.
+     *
      * @param child
      */
     protected void cascadeCut(FibHeapNode child) {
         FibHeapNode parent = child.parent;
-        if(parent != null) {
-            if(!child.child_cut) {
+        if (parent != null) {
+            if (!child.child_cut) {
                 child.child_cut = true;
-            }
-            else {
+            } else {
                 cut(child, parent);
                 cascadeCut(parent);
             }
@@ -163,55 +131,84 @@ public class FibonacciHeapOperations {
      * until there are no more trees of equal degree in the root list.
      */
     protected void pairwiseCombine() {
-        int arraySize = nodeCount + 1;
+        int arraySize = no_of_nodes + 1;
         FibHeapNode[] roots = new FibHeapNode[arraySize];
-        for(int i = 0; i < arraySize; i++) {
+        for (int i = 0; i < arraySize; i++) {
             roots[i] = null;
         }
-        // Find the number of root nodes.
-        int numRoots = 0;
-        FibHeapNode x = maxNode;
 
-        if(x != null) {
+        roots = rootNumList(roots);
+        node_with_max_key = null;
+        reconstruct_root_list(arraySize, roots);
+    }
+
+    private void reconstruct_root_list(int arraySize, FibHeapNode[] roots) {
+        for (int i = 0; i < arraySize; i++) {
+            if (roots[i] != null) {
+                if (node_with_max_key != null) {
+                    roots[i].left.right = roots[i].right;
+                    roots[i].right.left = roots[i].left;
+                    roots[i].left = node_with_max_key;
+                    roots[i].right = node_with_max_key.right;
+                    node_with_max_key.right = roots[i];
+                    roots[i].right.left = roots[i];
+                    //Setting the node_with_max_key
+                    if (roots[i].key > node_with_max_key.key) {
+                        node_with_max_key = roots[i];
+                    }
+                } else {
+                    node_with_max_key = roots[i];
+                }
+            }
+        }
+    }
+
+    private FibHeapNode travaseTree(FibHeapNode node_with_max_key) {
+        FibHeapNode x = node_with_max_key;
+        if (x != null) {
             numRoots++;
             x = x.left;
-
-            while(x != maxNode) {
+            while (x != node_with_max_key) {
                 numRoots++;
                 x = x.left;
             }
         }
-        while(numRoots > 0) {
+        return x;
+    }
+
+    private void removeYFromHeap(FibHeapNode x, FibHeapNode y) {
+        y.left.right = y.right;
+        y.right.left = y.left;
+        y.parent = x;
+        if (x.child == null) {
+            x.child = y;
+            y.right = y;
+            y.left = y;
+        } else {
+            y.left = x.child;
+            y.right = x.child.right;
+            x.child.right = y;
+            y.right.left = y;
+        }
+        x.degree_of_node++;
+        y.child_cut = false;
+    }
+
+    private FibHeapNode[] rootNumList(FibHeapNode[] roots) {
+        FibHeapNode x = travaseTree(node_with_max_key);
+        while (numRoots > 0) {
             int d = x.degree_of_node;
             FibHeapNode next = x.left;
-            while(roots[d] != null) { //if there exists a root node with same degree
+            while (roots[d] != null) { //if there exists a root node with same degree
                 FibHeapNode y = roots[d];
-                if(x.key < y.key) {
+                if (x.key < y.key) {
                     FibHeapNode temp = y;
                     y = x;
                     x = temp;
                 }
 
                 // remove y from root list of heap
-                y.left.right = y.right;
-                y.right.left = y.left;
-                y.parent = x;
-                if(x.child == null) {
-                    x.child = y;
-                    y.right = y;
-                    y.left = y;
-                }
-                else {
-                    y.left = x.child;
-                    y.right = x.child.right;
-                    x.child.right = y;
-                    y.right.left = y;
-                }
-                //Increment the degree of the x
-                x.degree_of_node++;
-                //Set the child_cut of y to FALSE
-                y.child_cut = false;
-
+                removeYFromHeap(x, y);
                 roots[d] = null;
                 d++;
             }
@@ -219,26 +216,6 @@ public class FibonacciHeapOperations {
             x = next;
             numRoots--;
         }
-        maxNode = null;
-        // Reconstruct the root list from the array entries in roots[].
-        for(int i = 0; i < arraySize; i++) {
-            if(roots[i] != null) {
-                if(maxNode != null) {
-                    roots[i].left.right = roots[i].right;
-                    roots[i].right.left = roots[i].left;
-                    roots[i].left = maxNode;
-                    roots[i].right = maxNode.right;
-                    maxNode.right = roots[i];
-                    roots[i].right.left = roots[i];
-                    //Setting the maxNode
-                    if(roots[i].key > maxNode.key) {
-                        maxNode = roots[i];
-                    }
-                }
-                else {
-                    maxNode = roots[i];
-                }
-            }
-        }
+        return roots;
     }
 }
