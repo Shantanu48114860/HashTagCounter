@@ -8,8 +8,13 @@ public class hashtagcounter {
         // write your code here
         //String file = "/Users/shantanughosh/Desktop/Shantanu_MS/Spring_20/ADS/Project/Git_hub/HashTagCounter/src/sampleInput.txt";
         //String file = "/Users/shantanughosh/Desktop/Shantanu_MS/Spring_20/ADS/Project/Git_hub/HashTagCounter/src/input1.txt";
-
-        new HashTagCounterMaster().initiate(args[0]);
+        if (args.length == 0) {
+            System.out.println("Enter valid argument");
+        } else if (args.length == 1) {
+            new HashTagCounterMaster().initiate(args[0], "");
+        } else if (args.length == 2) {
+            new HashTagCounterMaster().initiate(args[0], args[1]);
+        }
     }
 }
 
@@ -67,7 +72,7 @@ class HashTagCounterMaster {
     //Hash table
     Hashtable<String, FibHeapNode> fib_store = new Hashtable<String, FibHeapNode>();
 
-    void initiate(String input_file) {
+    void initiate(String input_file, String output_file) {
         try {
             BufferedReader in = new BufferedReader(new FileReader(input_file));
             String line;
@@ -77,7 +82,7 @@ class HashTagCounterMaster {
                 } else if (line.equalsIgnoreCase("stop")) {
                     return;
                 } else {
-                    process(line);
+                    process(line, output_file);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -111,7 +116,10 @@ class HashTagCounterMaster {
         fib_store.put(hash_tag, new_node);
     }
 
-    private void writeFile(File output_file, String output_line) {
+    private void writeFile(String output_file_name, File output_file, String output_line) {
+        if (output_file_name != "") {
+            output_file = new File(output_file_name);
+        }
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(output_file, true));
@@ -138,7 +146,7 @@ class HashTagCounterMaster {
      *
      * @param str_query
      */
-    void process(String str_query) {
+    void process(String str_query, String output_file) {
         int query = 0;
         try {
             query = Integer.parseInt(str_query);
@@ -147,7 +155,7 @@ class HashTagCounterMaster {
         }
 
         String output_line = removeMaxNode(query);
-        writeFile(output, output_line.substring(0, output_line.length() - 1));
+        writeFile(output_file, output, output_line.substring(0, output_line.length() - 1));
         addBackRemovedNode();
 
     }
