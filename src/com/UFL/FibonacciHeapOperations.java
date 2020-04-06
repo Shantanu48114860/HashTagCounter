@@ -25,9 +25,9 @@ public class FibonacciHeapOperations {
         }
     }
 
-    public FibHeapNode increaseKey(FibHeapNode current, int newKey) {
+    public FibHeapNode increaseKey(FibHeapNode current, int new_key) {
         FibHeapNode parent = null;
-        current.key = newKey;
+        current.key = new_key;
         parent = current.parent;
         if ((parent != null) && (current.key > parent.key)) {
             cut(current, parent);
@@ -40,37 +40,37 @@ public class FibonacciHeapOperations {
     }
 
     public FibHeapNode removeMax() {
-        FibHeapNode nodeToDelete = node_with_max_key;
-        if (nodeToDelete != null) {
-            updateChildCount(nodeToDelete);
-            removeNodeFromRoot(nodeToDelete);
+        FibHeapNode node_to_delete = node_with_max_key;
+        if (node_to_delete != null) {
+            updateChildCount(node_to_delete);
+            removeNodeFromRoot(node_to_delete);
         }
-        return nodeToDelete;
+        return node_to_delete;
     }
 
-    private void removeNodeFromRoot(FibHeapNode nodeToDelete) {
-        nodeToDelete.left.right = nodeToDelete.right;
-        nodeToDelete.right.left = nodeToDelete.left;
-        if (nodeToDelete == nodeToDelete.right) {
+    private void removeNodeFromRoot(FibHeapNode node_to_delete) {
+        node_to_delete.left.right = node_to_delete.right;
+        node_to_delete.right.left = node_to_delete.left;
+        if (node_to_delete == node_to_delete.right) {
             node_with_max_key = null;
         } else {
-            node_with_max_key = nodeToDelete.right;
+            node_with_max_key = node_to_delete.right;
             pairwiseCombine();
         }
         no_of_nodes--;
     }
 
-    private void updateChildCount(FibHeapNode nodeToDelete) {
-        int childCount = nodeToDelete.degree_of_node;
-        FibHeapNode child = nodeToDelete.child;
-        deleteNodes(childCount, child);
+    private void updateChildCount(FibHeapNode node_to_delete) {
+        int child_count = node_to_delete.degree_of_node;
+        FibHeapNode child = node_to_delete.child;
+        deleteNodes(child_count, child);
 
     }
 
-    private void deleteNodes(int childCount, FibHeapNode child) {
-        FibHeapNode tempRight;
-        while (childCount > 0) {
-            tempRight = child.right;
+    private void deleteNodes(int child_count, FibHeapNode child) {
+        FibHeapNode temp_right;
+        while (child_count > 0) {
+            temp_right = child.right;
             child.left.right = child.right;
             child.right.left = child.left;
             child.left = node_with_max_key;
@@ -78,8 +78,8 @@ public class FibonacciHeapOperations {
             node_with_max_key.right = child;
             child.right.left = child;
             child.parent = null;
-            child = tempRight;
-            childCount--;
+            child = temp_right;
+            child_count--;
         }
     }
 
@@ -195,27 +195,32 @@ public class FibonacciHeapOperations {
     }
 
     private FibHeapNode[] rootNumList(FibHeapNode[] roots) {
-        FibHeapNode x = travaseTree(node_with_max_key);
+        FibHeapNode max_key_node = travaseTree(node_with_max_key);
         while (numRoots > 0) {
-            int d = x.degree_of_node;
-            FibHeapNode next = x.left;
-            while (roots[d] != null) { //if there exists a root node with same degree
-                FibHeapNode y = roots[d];
-                if (x.key < y.key) {
-                    FibHeapNode temp = y;
-                    y = x;
-                    x = temp;
-                }
-
-                // remove y from root list of heap
-                removeYFromHeap(x, y);
-                roots[d] = null;
-                d++;
+            int degree = max_key_node.degree_of_node;
+            FibHeapNode next = max_key_node.left;
+            while (roots[degree] != null) { //if there exists a root node with same degree
+                max_key_node = deleteRootWithSameDegree(roots, max_key_node, degree);
+                roots[degree] = null;
+                degree++;
             }
-            roots[d] = x;
-            x = next;
+            roots[degree] = max_key_node;
+            max_key_node = next;
             numRoots--;
         }
         return roots;
+    }
+
+    private FibHeapNode deleteRootWithSameDegree(FibHeapNode[] roots, FibHeapNode max_key_node, int degree) {
+        FibHeapNode node_to_delete = roots[degree];
+        if (max_key_node.key < node_to_delete.key) {
+            FibHeapNode temp = node_to_delete;
+            node_to_delete = max_key_node;
+            max_key_node = temp;
+        }
+
+        // remove y from root list of heap
+        removeYFromHeap(max_key_node, node_to_delete);
+        return max_key_node;
     }
 }

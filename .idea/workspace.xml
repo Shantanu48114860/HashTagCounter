@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2b7356c-c60e-493e-9d54-6dc445342642" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hashtagcounter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Shantanu/com/UFL/FibonacciHeapOperations.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Shantanu/com/UFL/FibonacciHeapOperations.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Shantanu/com/UFL/hashtagcounter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Shantanu/com/UFL/hashtagcounter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/output_file.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/UFL/FibonacciHeapOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/UFL/FibonacciHeapOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/UFL/hashtagcounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/UFL/hashtagcounter.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -86,7 +84,7 @@
       <option name="presentableId" value="Default" />
       <updated>1586137082969</updated>
       <workItem from="1586137085108" duration="7667000" />
-      <workItem from="1586147720106" duration="4072000" />
+      <workItem from="1586147720106" duration="5211000" />
     </task>
     <servers />
   </component>
