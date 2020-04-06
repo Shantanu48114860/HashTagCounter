@@ -318,8 +318,8 @@ class FibonacciHeapOperations {
     /**
      * Util method to remove arbitary node from the Heap
      *
-     * @param x
-     * @param y
+     * @param temp1
+     * @param temp2
      */
     private void removeArbitaryNodeFromHeap(FibHeapNode temp1, FibHeapNode temp2) {
         temp2.left.right = temp2.right;
