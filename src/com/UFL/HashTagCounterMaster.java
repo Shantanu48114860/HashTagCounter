@@ -15,16 +15,16 @@ class Util {
 }
 
 public class HashTagCounterMaster {
-    //output file
     File output = new File("output_file.txt");
-    //ArrayList to store removed Nodes
+    StringBuilder sb = new StringBuilder();
     ArrayList<FibHeapNode> nodes_deleted = new ArrayList<FibHeapNode>();
-    //Max Fibonacci heap
     FibonacciHeapOperations heap_operations = new FibonacciHeapOperations();
-    //Hash table
     Hashtable<String, FibHeapNode> fib_store = new Hashtable<String, FibHeapNode>();
 
-    void initiate(String input_file) {
+    void initiate(String input_file, String output_file_name) {
+        if (output_file_name != "") {
+            output = new File(output_file_name);
+        }
         try {
             BufferedReader in = new BufferedReader(new FileReader(input_file));
             String line;
@@ -32,15 +32,35 @@ public class HashTagCounterMaster {
                 if (line.startsWith("#")) {
                     createNewNode(Util.getTag(line), Util.getFrequency(line));
                 } else if (line.equalsIgnoreCase("stop")) {
+                    writeToOutput(sb.toString());
                     return;
                 } else {
-                    process(line);
+                    queryHeap(line);
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void writeToOutput(String output_line) throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream(output);
+        try {
+            byte[] bytesArray = output_line.getBytes();
+            fos.write(bytesArray);
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -68,34 +88,13 @@ public class HashTagCounterMaster {
         fib_store.put(hash_tag, new_node);
     }
 
-    private void writeFile(File output_file, String output_line) {
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(output_file, true));
-            bw.write(output_line);
-            bw.newLine();
-            bw.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     /**
      * Generates the Max Fibonacci heap and calls removeMax() for
      * query number of times.
      *
      * @param str_query
      */
-    void process(String str_query) {
+    void queryHeap(String str_query) {
         int query = 0;
         try {
             query = Integer.parseInt(str_query);
@@ -104,9 +103,10 @@ public class HashTagCounterMaster {
         }
 
         String output_line = removeMaxNode(query);
-        writeFile(output, output_line.substring(0, output_line.length() - 1));
+        output_line = output_line.substring(0, output_line.length() - 1);
+        sb.append(output_line);
+        sb.append(System.getProperty("line.separator"));
         addBackRemovedNode();
-
     }
 
     private void addBackRemovedNode() {

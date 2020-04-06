@@ -8,6 +8,6 @@ public class hashtagcounter {
         //String file = "/Users/shantanughosh/Desktop/Shantanu_MS/Spring_20/ADS/Project/Git_hub/HashTagCounter/src/input1.txt";
 
         // new HashTagCounterMaster().initiate(args[0]);
-        new HashTagCounterMaster().initiate(file);
+        new HashTagCounterMaster().initiate(file,"out.txt");
     }
 }
