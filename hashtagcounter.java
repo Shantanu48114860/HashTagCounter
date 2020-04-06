@@ -252,7 +252,7 @@ class HashTagCounterBL {
         removed_node.setKey(max_node.getKey());
         removed_node.setTag(max_node.getTag());
         node_removed_store.add(removed_node);
-        return removedNode.getTag();
+        return removed_node.getTag();
     }
 }
 
