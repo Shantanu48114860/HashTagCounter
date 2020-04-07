@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c2b7356c-c60e-493e-9d54-6dc445342642" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hashtagcounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/hashtagcounter.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +81,7 @@
       <option name="presentableId" value="Default" />
       <updated>1586137082969</updated>
       <workItem from="1586137085108" duration="7667000" />
-      <workItem from="1586147720106" duration="18030000" />
+      <workItem from="1586147720106" duration="21977000" />
     </task>
     <servers />
   </component>
