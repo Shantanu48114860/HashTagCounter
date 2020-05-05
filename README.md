@@ -7,9 +7,15 @@ Assumption: There will be a large number of hashtags appearing in the stream and
 This project is implemented in Java version 13.
 
 # Execution:
-Following are the required steps to execute the project:
-• javac hashtagcounter.java
-• java hashtagcounter <input_file_name> <output_file_name>
+Following are the required steps to execute the project:<br/>
+• javac hashtagcounter.java <br/>
+• java hashtagcounter <input_file_name> <output_file_name> <br/>
 • If output file name is mentioned, view the output in the output file, else view the output
 in the output_file.txt
+
+# Detail Problem description
+Detail problem description is written at the file: ./projectSpring2020.pdf
+
+# Project Report:
+Project report is written at the file: ./ProjectReport-converted.pdf
 
