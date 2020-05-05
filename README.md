@@ -8,9 +8,7 @@ This project is implemented in Java version 13.
 
 # Execution:
 Following are the required steps to execute the project:
-• Unzip the project
-• Paste the input file into the project folder
-• make
+• javac hashtagcounter.java
 • java hashtagcounter <input_file_name> <output_file_name>
 • If output file name is mentioned, view the output in the output file, else view the output
 in the output_file.txt
